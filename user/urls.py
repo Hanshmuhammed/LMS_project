@@ -6,5 +6,6 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
-  
+ path('user/', views.user_page, name='user_page'), 
 ]
+

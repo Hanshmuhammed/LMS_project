@@ -6,5 +6,5 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
-    
+    path('contact/', views.contact, name='contact_page'), 
 ]

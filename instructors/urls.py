@@ -6,5 +6,5 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
-   
+   path('instructor_page', views.instructor, name='instructor'), 
 ]
