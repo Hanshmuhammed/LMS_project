@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'contact',
     'core'
 ]
+AUTH_USER_MODEL = 'user.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
