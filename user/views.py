@@ -1,9 +1,15 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login ,logout
 from django.contrib import messages
 from . models import User
 
 # Create your views here.
+def log_out(request):
+    logout(request)
+    return redirect('index')
+
+
+
 def user_page(request):
     context={}
     if request.POST and 'register' in request.POST:
@@ -13,6 +19,7 @@ def user_page(request):
             email=request.POST.get('email')
             password1=request.POST.get('password1')
             password2=request.POST.get('password2')
+            role = request.POST.get('role')
 
             if password1 != password2:
                 messages.error(request, "Passwords do not match!")
@@ -21,9 +28,12 @@ def user_page(request):
             elif User.objects.filter(email=email).exists():
                 messages.error(request, "Email is already registered!")
             else:
-                user = User.objects.create_user(username=username, 
-                                                email=email, 
-                                                password=password1)
+                user = User.objects.create_user(
+                username=username, 
+                email=email, 
+                password=password1,
+                role=role  # Save role
+            )
                 success_message='registed succesfully'
                 messages.success(request,success_message)
         except Exception as e:
@@ -39,9 +49,14 @@ def user_page(request):
         if user is not None:  # Authenticate successful
             login(request, user)
             messages.success(request, "Login successful!")
-            return redirect('index')
-        else:  # Authentication failed
-            messages.error(request, "Invalid credentials!")
+            if user.role == 'student':
+                return redirect('index')  # Replace with your student home page URL name
+            elif user.role == 'teacher':
+                return redirect('index')  # Replace with your teacher home page URL name
+            
+
+        else:
+            messages.error(request, "Invalid credentials!")    
       
 
     return render(request,'user.html',context)
